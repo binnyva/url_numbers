@@ -76,15 +76,16 @@ function getSliceHtml(slice_index) {
  		
  		if(ele.number) {
 			if(i+1 == slice_index) url += "%%INSERT_NUMBER_HERE%%";
-			else url += ele.number;
+			else url += applyMask(ele.number, ele.mask);
  		}
  	});
+ 	//p(url, slice_details.mask);
 	
-	var next_url = url.replace("%%INSERT_NUMBER_HERE%%", (Number(slice_details.number) + slice_details.increment_by));
-	var prev_url = url.replace("%%INSERT_NUMBER_HERE%%", (Number(slice_details.number) - slice_details.increment_by));
+	var next_url = url.replace("%%INSERT_NUMBER_HERE%%", applyMask(Number(slice_details.number) + slice_details.increment_by, slice_details.mask));
+	var prev_url = url.replace("%%INSERT_NUMBER_HERE%%", applyMask(Number(slice_details.number) - slice_details.increment_by, slice_details.mask));
 	
 	if((Number(slice_details.number)-1) >= 0) text += "<a onclick='return Img.load(this, -1);' class='controls' href='" + prev_url + "'>&laquo;</a> ";
-	text += slice_details.number +" <a onclick='return Img.load(this, 1);' class='controls' href='" + next_url + "'>&raquo;</a>";
+	text += applyMask(slice_details.number, slice_details.mask) +" <a onclick='return Img.load(this, 1);' class='controls' href='" + next_url + "'>&raquo;</a>";
 	
 	return text;
 }
@@ -100,12 +101,14 @@ function getSliceImageUrl(direction) {
 function buildInterfaceWithSlices() {
 	var html = "";
 	var url = ""
+	
 	for(var i=1; i<slices.length; i++) {
 		var current_slice = slices[i];
 		
 		html += current_slice.text_before;
 		url += current_slice.text_before;
 		
+		//p(current_slice.text_before);
 		if(current_slice.number) {
 			url += current_slice.number;
 			

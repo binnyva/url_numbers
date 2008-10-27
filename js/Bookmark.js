@@ -46,7 +46,7 @@ Bookmark = {
 		var html = [];
 		JSL.array(bookmarks).each(function(ele,i) {
 			html.push("<span id='bookmark-row-"+i+"'><a href='"+ele.url+"' class='filler' id='bookmark-"+i+"'>"+ele.url+"</a>"
-				+ " - <a href='#' id='delete-bookmark-"+i+"' class='delete-bookmarks icon delete'>Delete Bookmark</a></span>");
+				+ " <a href='#' id='delete-bookmark-"+i+"' class='delete-bookmarks icon delete'>Delete Bookmark</a></span>");
 		});
 		$("saved-bookmarks").innerHTML = html.join("<br />");
 		

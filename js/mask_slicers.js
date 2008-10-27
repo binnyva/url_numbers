@@ -38,6 +38,10 @@ function getNextSliceMasked(mask, index) {
 		
 		field.slice_end_index = index + match_position + mask_match[0].length; // The slice ends when the mask of this slice and its description field and a spearator ends
 		field.mask = slice_mask;
+		
+		// Fill in the defaults
+		field.number = 1;
+		field.length = field.mask.length;
 
 		//Mask may have a description field right after it - if so, get it as well.
 		if(mask_match[3]) { //Get the description field if its there
@@ -73,14 +77,13 @@ function getNextSliceMasked(mask, index) {
 			});
 			
 			if(!field.number) field.number = field.starts_at;
-			field.length = field.number.toString().length;
-			
+		
 		}
 		
 		// Finds the beginnig and ending location of this slice
 		field.start_index = last_slice.end_index + match_position;
 		field.end_index = field.start_index + field.length;
-		field.text_before = mask.slice(last_slice.end_index, field.start_index);
+		field.text_before = full_mask.slice(last_slice.end_index, field.start_index);
 		
 	} else {
 		field.start_index = last_slice.end_index;

@@ -37,16 +37,18 @@ function init() {
 	$("next-image").click(Img.next);
 	
 	// Keyboard Shortcuts
-	shortcut.add("right", Img.next);
-	shortcut.add("left", Img.previous);
-	shortcut.add("Space", Img.next);
-	shortcut.add("Backspace", Img.previous);
+	shortcut.add("right", Img.next, {"disable_in_input":true});
+	shortcut.add("left", Img.previous, {"disable_in_input":true});
+	shortcut.add("Space", Img.next, {"disable_in_input":true});
+	shortcut.add("Backspace", Img.previous, {"disable_in_input":true});
 	
 	//$("url").value = "http://localhost/Under_Construction/URL_Numbers/Comics/Naruto/00000000/Naruto-Pilot-01.jpg";
 	//$("url").value = "http://www.schlockmercenary.com/comics/schlock20001115.png";
+	// http://localhost/Projects/URL_Numbers/Comics/Calvin_Hobbes/1986/ch860101.gif
 	//simpleParse();
 	//$("mask").value = "http://www.schlockmercenary.com/comics/schlock####(2000)|##(11)|##(15).png";
-	//maskParse();
+	$("mask").value = "http://localhost/Projects/URL_Numbers/Comics/Calvin_Hobbes/####/ch##|##|##.gif";
+	maskParse();
 }
 
 
