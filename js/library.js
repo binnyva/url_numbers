@@ -26,3 +26,7 @@ function array2json(arr) {
     if(is_list) return '[' + json + ']';//Return numerical JSON
     return '{' + json + '}';//Return associative JSON
 }
+
+function getIdNumber(ele) {
+	return Number(ele.id.replace(/[^\d]/g, ""));
+}

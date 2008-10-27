@@ -1,57 +1,44 @@
 ///////////////////////////////////////////////// Mask S/icers ///////////////////////////////////////
-
 //Parse the URL with a given mask.
 function maskParse() {
-	//var url = $("url").value;
-	var mask =$("mask").value;
+	var mask = $("mask").value;
 	if(!mask) return;
 	
-	var run = 0;
-	var text = "";
-	var slice_count = 1;
+	initializeGlobalVariables(); // Reinitialize Globals
+	
+	// I did it this way because the flow was entirly different in the last version. This is an artifat from that version.
 	var slice = getNextSliceMasked(mask, 0);
  	while(slice.number) {
-		var number = Number(slice.number);
-		if(number) {
-			var color = getNextColor();
-	
-			text += slice.slice + "<span id='slice-"+slice_count+"' style='background-color:"+color+";'>";
-			text += getSliceHtml(slice);
-			text += "</span>";
-			slice_count++;
-			
-		}
-		
- 		//p(JSL.debug.dump(slice));
- 		
- 		run++;
- 		if(run>10) break;
- 		slice = getNextSliceMasked(mask, slice.last_index);
- 	}	
+ 		slice = getNextSliceMasked(mask, slice.slice_end_index);
+ 	}
 
-	$("url-area").innerHTML = text + slice.slice;
-	//Img.show(url);
+	buildInterfaceWithSlices();
 }
 
 function getNextSliceMasked(mask, index) {
 	var full_mask= mask;
-	mask= mask.slice(index);
+	mask = mask.slice(index);
 	if(!mask) return false;
 	
-	var number = "";
-	var match_position = 0;
-	var slice = "";
-	var new_url_plus = "";
-	var new_url_minus = "";
+	slice_count++;
 	
+	var match_position = 0;
+	
+	var last_slice = slices[slice_count - 1];
+	var field = {}; // Initialize all the values
+	for(var i in slices[0]) field[i] = slices[0][i]; // I cant to field = slices[0];  - it creates a reference link in FF. So all changes to field will reflect in slices[0] as well.
+	field.index = slice_count;
+	
+	// Find the Mask
 	var mask_match = mask.match(/((\#+)(\(([^\)]+)\))?)\|?/); //A series of #s then a ( to ) description field(optional) and a | seperator(optional)
 	if(mask_match) {
 		var slice_mask_desc = "";
 		var slice_mask = mask_match[1];
 		var match_position = mask.indexOf(slice_mask);
 		
-		p(mask, slice_mask,  mask_match);
-		
+		field.slice_end_index = index + match_position + mask_match[0].length; // The slice ends when the mask of this slice and its description field and a spearator ends
+		field.mask = slice_mask;
+
 		//Mask may have a description field right after it - if so, get it as well.
 		if(mask_match[3]) { //Get the description field if its there
 			slice_mask_desc = mask_match[4].replace(/\s/,""); //Remove the white space
@@ -66,70 +53,43 @@ function getNextSliceMasked(mask, index) {
  * end=NUMBER	Ends at given number
  * +NUMBER		'+' is an operator - Increment by the given Number. Eg. +2. Default +1
  */
- 			var field_property = {};
- 			var starts_at = 1;
- 			var ends_at = 0;
-
+			
 			//Parse the field commands.
 			fields.each(function(ele) {
 				//Its a day field
 				if(ele == "day") {
-					field_property.day = true;
+					field.day = true;
 					
-					if(starts_at) { // Add a 0 padding to the starts at number.
-						if(starts_at < 10) starts_at = "0" + starts_at;
+					if(field.starts_at) { // Add a 0 padding to the starts at number.
+						if(field.starts_at < 10) field.starts_at = "0" + field.starts_at;
 					} else {
-						starts_at = "01";
+						field.starts_at = "01";
 					}
 				
 				//The field is a number - its the starting digit.
-				} else if(ele.match(/^\d+$/)) { 
-					starts_at = Number(ele);
+				} else if(ele.match(/^\d+$/)) {
+					field.starts_at = Number(ele);
 				}
 			});
+			
+			if(!field.number) field.number = field.starts_at;
+			field.length = field.number.toString().length;
+			
 		}
 		
-		slice = mask.slice(0, match_position);
-		var number = mask.substr(match_position, slice_mask.length);
-
-		var len = slice_mask.length;
-		//Create links with Number+1, Number-1 etc.
-		var dont_look_in_url = full_mask.slice(0, match_position + index);//The part that must not be checked for the number
-		var look_in_url = full_mask.slice(match_position + index, match_position+index+len); //The part of the url that must be checked for the number
-		var rest_url = full_mask.slice(match_position + index + len); //The rest of the URL
+		// Finds the beginnig and ending location of this slice
+		field.start_index = last_slice.end_index + match_position;
+		field.end_index = field.start_index + field.length;
+		field.text_before = mask.slice(last_slice.end_index, field.start_index);
 		
-		//Find the number, and make it 1 more and 1 less and get the url.
-		new_url_plus = dont_look_in_url + look_in_url.replace(number,applyMask(Number(number)+1, slice_mask)) + rest_url;
-		if(Number(number)-1) new_url_minus = dont_look_in_url + look_in_url.replace(number,applyMask(Number(number)-1, slice_mask)) + rest_url;
-		else new_url_minus = full_mask;
-		
-	} else { //No number in url - end it by not providing the 'number' index.
-		return {"slice":mask};
+	} else {
+		field.start_index = last_slice.end_index;
+		field.text_before = full_mask.slice(index); //Get the final part of the url
 	}
-	
-	return {
-		"slice":slice,
-		"number":number,
-		"last_index": index + match_position + slice_mask.length,
-		"index":index,
-		"url_plus":new_url_plus,
-		"url_minus":new_url_minus
-	}
-}
 
-/// Get the next and previos link for the given slice
-function getSliceHtml(slice) {
-	var text = "";
-	if((Number(slice.number)-1) >= 0) text += " <a onclick='return Img.load(this, "+slice.index+");' class='controls' href='"+slice.url_minus+"'>&laquo;</a> ";
-	text += slice.number +" <a onclick='return Img.load(this, "+slice.index+");' class='controls' href='"+slice.url_plus+"'>&raquo;</a>";
+	slices[Number(slice_count)] = field;
 	
-	return text;
-}
-
-// Get the next and previous urls in the main slice - used to cache those images.
-function getSliceImageUrl(direction) {
-	if(typeof direction == "undefined") direction = 1;
-	return $("slice-"+main_slice).getElementsByTagName("a")[direction].href;
+	return field;
 }
 
 /////////////////////////////////////////////// Mask Fuctions ///////////////////////////////////////////

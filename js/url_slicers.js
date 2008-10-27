@@ -4,93 +4,119 @@ function simpleParse() {
 	if(!url) return;
 	$("details").show();
 	
-	var run = 0;
-	var text = "";
+	initializeGlobalVariables(); // Reinitialize Globals
+	
+	// I did it this way because the flow was entirly different in the last version. This is an artifat from that version.
 	var mask = "";
-	var slice_count = 1;
-	var slice = getNextSlice(url, "", 0);
-	while(slice.number) {
-		var number = Number(slice.number);
-		if(slice.number) {
-			var color = getNextColor();
-	
-			text += slice.slice + "<span id='slice-"+slice_count+"' style='background-color:"+color+";'>";
-			text += getSliceHtml(slice);
-			text += "</span>";
-			slice_count++;
-			
-			// Create the mask.
-	 		mask += slice.slice + getMask(slice.number);
-		}
-		
-		run++;
-		if(run>10) break;
-		slice = getNextSlice(url, "", slice.last_index);
-	}
-	$("url-area").innerHTML = text + slice.slice;
-	mask += slice.slice;
-	
-	$("mask").value = mask;
-	Img.show(url);
+	var slice = getNextSlice(url, 0);
+ 	while(slice.number) {
+ 		mask += slice.text_before + slice.mask;
+ 		slice = getNextSlice(url, slice.slice_end_index);
+ 	}
+ 	mask += slice.text_before;
+ 	
+ 	$("mask").value = mask;
+
+	buildInterfaceWithSlices();
 }
 
 // Returns the parts of the URL and the number next to it.
-function getNextSlice(url, mask, index) {
+function getNextSlice(url, index) {
 	var full_url = url;
 	url = url.slice(index);
 	if(!url) return false;
 	
-	var number = "";
+	slice_count++;
+	
 	var match_position = 0;
-	var slice = "";
-	var new_url_plus = "";
-	var new_url_minus = "";
+	var number = "";
 	
-	var mask_match = url.match(/(\d+)/);
-	if(mask_match) {
-		var slice_mask = "";
-		var slice_mask_desc = "";
+	var last_slice = slices[slice_count - 1];
+	var field = {}; // Initialize all the values
+	for(var i in slices[0]) field[i] = slices[0][i]; // I cant to field = slices[0];  - it creates a reference link in FF. So all changes to field will reflect in slices[0] as well.
+	field.index = slice_count;
+
+	var number_match = url.match(/(\d+)/);
+	if(number_match) {
+		field.number = number_match[0];
+		field.length = field.number.length;
+		var match_position = url.indexOf(field.number);
+		var slice = url.slice(0, match_position);
+		field.mask = getMask(field.number);
+		field.slice_end_index = index + match_position + field.length; // The slice ends when the mask of this slice and its description field and a spearator ends
 		
-		number = mask_match[0];
-		var match_position = url.indexOf(number);
-		slice = url.slice(0, match_position);
+		// Finds the beginnig and ending location of this slice
+		field.start_index = last_slice.end_index + match_position;
+		field.end_index = field.start_index + field.length;
+		field.text_before = full_url.slice(last_slice.slice_end_index, field.start_index);
 		
-		//Find the mask(if any) for this slice.
-		if(mask) {
-			var slice_mask_match = mask.slice(match_position).match(/\#+/);
-			slice_mask = slice_mask_match[0];
-			
-			//Mask may have a description field right after it - if so, get it as well.
-			if(mask[match_position+slice_mask.length] == "(") { //The description field starts with a ( - get it only if that char is present.
-				slice_mask_desc = mask.slice(match_position+slice_mask.length).replace(/\(([^\)]+)\).*/, "$1");
-			}
-		} else { //If there is no explicit mask, get a mask from the url structure
-			var slice_mask = getMask(number);
-		}
-		
-		var len = number.length;
-		//Create links with Number+1, Number-1 etc.
-		var dont_look_in_url = full_url.slice(0, match_position + index);//The part that must not be checked for the number
-		var look_in_url = full_url.slice(match_position + index, match_position+index+len); //The part of the url that must be checked for the number
-		var rest_url = full_url.slice(match_position + index + len); //The rest of the URL
-		
-		//Find the number, and make it 1 more and 1 less and get the url.
-		new_url_plus = dont_look_in_url + look_in_url.replace(number,applyMask(Number(number)+1, slice_mask)) + rest_url;
-		if(Number(number)-1) new_url_minus= dont_look_in_url + look_in_url.replace(number,applyMask(Number(number)-1, slice_mask)) + rest_url;
-		else new_url_minus = full_url;
-		
-		//p(applyMask(Number(number)+1, slice_mask), new_url_plus);
-		
-	} else { //No number in url - end it by not providing the 'number' index.
-		return {"slice":url}
+	} else {
+		field.start_index = last_slice.end_index;
+		field.text_before = full_url.slice(index); //Get the final part of the url
 	}
+
+	slices[Number(slice_count)] = field;
 	
-	return {
-		"slice":slice,
-		"last_index":index + match_position + number.length,
-		"number":number,
-		"index":index,
-		"url_plus":new_url_plus,
-		"url_minus":new_url_minus
-	}
+	return field;
 }
+
+/// Get the next and previous link for the given slice
+function getSliceHtml(slice_index) {
+	// Get the neccessary info of the said slice
+	var slice_details = slices[slice_index];
+
+	if(!slice_details.number) return "";
+	var text = "";
+	
+	//This is a bit complex. Go thru all the slices and get their content.
+	var url = "";
+ 	
+ 	JSL.array(slices.slice(1)).each(function(ele, i) {
+ 		url += ele.text_before;
+ 		
+ 		if(ele.number) {
+			if(i+1 == slice_index) url += "%%INSERT_NUMBER_HERE%%";
+			else url += ele.number;
+ 		}
+ 	});
+	
+	var next_url = url.replace("%%INSERT_NUMBER_HERE%%", (Number(slice_details.number) + slice_details.increment_by));
+	var prev_url = url.replace("%%INSERT_NUMBER_HERE%%", (Number(slice_details.number) - slice_details.increment_by));
+	
+	if((Number(slice_details.number)-1) >= 0) text += "<a onclick='return Img.load(this, -1);' class='controls' href='" + prev_url + "'>&laquo;</a> ";
+	text += slice_details.number +" <a onclick='return Img.load(this, 1);' class='controls' href='" + next_url + "'>&raquo;</a>";
+	
+	return text;
+}
+
+// Get the next and previous urls in the main slice - used to cache those images.
+function getSliceImageUrl(direction) {
+	if(typeof direction == "undefined") direction = 1;
+	return $("slice-"+main_slice).getElementsByTagName("a")[direction].href;
+}
+
+
+// Build the control interface with all the slices.
+function buildInterfaceWithSlices() {
+	var html = "";
+	var url = ""
+	for(var i=1; i<slices.length; i++) {
+		var current_slice = slices[i];
+		
+		html += current_slice.text_before;
+		url += current_slice.text_before;
+		
+		if(current_slice.number) {
+			url += current_slice.number;
+			
+			var color = getNextColor();
+			html += "<span class='slice-number' id='slice-"+i+"' style='background-color:"+color+";'>";
+			html += getSliceHtml(i);
+			html += "</span>";
+		}
+	}
+	
+	Img.show(url);
+	$("url-area").innerHTML = html;
+}
+

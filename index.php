@@ -35,7 +35,8 @@ showTop("Url Numbers");
 <input type="button" id="show-details" value="Parse" /><br />
 
 <div id="details">
-<input name="mask" id="mask" type="text" size="70" /><input type="button" id="masked-parse" value="Parse with Mask" /><br />
+<input name="mask" id="mask" type="text" size="70" />
+<input type="button" id="masked-parse" value="Parse with Mask" /><br />
 
 <span id="url-area"></span>
 </div>
@@ -45,10 +46,12 @@ showTop("Url Numbers");
 <a href="#" id="previous-image">&lt;</a>
 <img id="image-ele" src="images/white.png" />
 <a href="#" id="next-image">&gt;</a>
-</div>
 
 <br /><br />
 <a href="#" id="bookmark-current-url">Bookmark</a>
+</div>
+
+
 
 <?php
 showEnd();
