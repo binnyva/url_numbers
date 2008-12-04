@@ -29,24 +29,45 @@ Img = {
 	// Display the image
 	"show": function(url) {
 		loading();
+		$("image-area").show();
+		
+		if($("use-proxy").checked) url = "get_image.php?url=" + url; //Use a proxy with referal - if its on
+		if($("auto-resize").checked) { //Remove size restrictions
+			$("image-ele").removeAttribute("width");
+			$("image-ele").removeAttribute("height");
+		}
 		$("image-ele").src = url;
-		//$("image-ele").src = "get_image.php?url=" + url;
 	},
 	
 	// Called when the image has finished loading.
 	"loaded": function() {
 		loaded();
 		
+		//Resize the bigger images.
+		if($("auto-resize").checked) {
+			var img = $("image-ele");
+			if(img.height > window.innerHeight) img.height = window.innerHeight;
+			if(img.width > (window.innerWidth-60)) img.width = (window.innerWidth-60); //40 is 20+20 - for two handles - another 20 for margin.
+		}
+		
 		// Cache the next image
 		var cached_image = new Image();
-		cached_image.src = getSliceImageUrl();
+		var url = getSliceImageUrl();
+		if($("use-proxy").checked) url = "get_image.php?url=" + url; //Use a proxy with referal - if its turned on.
+		
+		$("caching").innerHTML = "caching <a href='"+url+"'>next image</a>..."
+		$("caching").show();
+		
+		cached_image.src = url;
+		cached_image.onload=function() {
+			$("caching").hide();
+		}
 	},
 	
 	// Load the next or previous image in the main slice
 	"openSlice": function(direction) {
-		if(typeof direction == "undefined") direction = 1;
-		var link = $("slice-"+main_slice).getElementsByTagName("a")[direction];
-		link.onclick(); //Click the link - that is execute the function in the onclick attribute
+		var link = getMainSliceAnchor(direction);
+		if(link) link.onclick(); //Click the link - that is execute the function in the onclick attribute
 	},
 	"next": 	function() {Img.openSlice(1);},
 	"previous": function() {Img.openSlice(0);}

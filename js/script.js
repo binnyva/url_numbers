@@ -35,20 +35,28 @@ function init() {
 	$("image-ele").load(Img.loaded);
 	$("previous-image").click(Img.previous);
 	$("next-image").click(Img.next);
+	$("advanced-tab").click(function() {$("advanced-options").toggle();});
+	
+	//User hits enter - handle the form submit.
+	$("url-form").on("submit", function(e) {
+		simpleParse();
+		JSL.event(e).stop();
+	});
 	
 	// Keyboard Shortcuts
 	shortcut.add("right", Img.next, {"disable_in_input":true});
 	shortcut.add("left", Img.previous, {"disable_in_input":true});
 	shortcut.add("Space", Img.next, {"disable_in_input":true});
 	shortcut.add("Backspace", Img.previous, {"disable_in_input":true});
+	//shortcut.add("Enter", maskParse, {"target": "mask"}); // Target not working in latest shortcuts.js
 	
 	//$("url").value = "http://localhost/Under_Construction/URL_Numbers/Comics/Naruto/00000000/Naruto-Pilot-01.jpg";
 	//$("url").value = "http://www.schlockmercenary.com/comics/schlock20001115.png";
 	// http://localhost/Projects/URL_Numbers/Comics/Calvin_Hobbes/1986/ch860101.gif
 	//simpleParse();
 	//$("mask").value = "http://www.schlockmercenary.com/comics/schlock####(2000)|##(11)|##(15).png";
-	$("mask").value = "http://localhost/Projects/URL_Numbers/Comics/Calvin_Hobbes/####/ch##|##|##.gif";
-	maskParse();
+	//$("mask").value = "http://localhost/Projects/URL_Numbers/Comics/Calvin_Hobbes/####/ch##|##|##.gif";
+	//maskParse();
 }
 
 

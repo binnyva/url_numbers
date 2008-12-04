@@ -16,7 +16,7 @@ function maskParse() {
 }
 
 function getNextSliceMasked(mask, index) {
-	var full_mask= mask;
+	var full_mask = mask;
 	mask = mask.slice(index);
 	if(!mask) return false;
 	

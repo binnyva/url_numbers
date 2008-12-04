@@ -1,8 +1,4 @@
-#details {
-	/* display:none; */
-} 
-
-#loading {
+#loading, #caching {
 	position:fixed;
 	background-color:#f00;
 	top:0;
@@ -13,4 +9,23 @@
 	z-index:9;
 	opacity:.6;
 	filter: alpha(opacity=60);
+}
+#caching {
+	left:90%;
+	background-color:#1058dd;
+}
+#caching * {
+	color:#fff;
+}
+
+br {
+	clear:both;
+}
+label {
+	width:200px;
+}
+
+
+.js-links {
+	cursor:pointer;
 }

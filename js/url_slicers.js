@@ -92,8 +92,10 @@ function getSliceHtml(slice_index) {
 
 // Get the next and previous urls in the main slice - used to cache those images.
 function getSliceImageUrl(direction) {
-	if(typeof direction == "undefined") direction = 1;
-	return $("slice-"+main_slice).getElementsByTagName("a")[direction].href;
+	var link = getMainSliceAnchor();
+	if(link) return link.href;
+	
+	return "";
 }
 
 
@@ -116,6 +118,7 @@ function buildInterfaceWithSlices() {
 			html += "<span class='slice-number' id='slice-"+i+"' style='background-color:"+color+";'>";
 			html += getSliceHtml(i);
 			html += "</span>";
+			main_slice = i; //The last slice should be the main slice.
 		}
 	}
 	
@@ -123,3 +126,14 @@ function buildInterfaceWithSlices() {
 	$("url-area").innerHTML = html;
 }
 
+function getMainSliceAnchor(direction) {
+	if(typeof direction == "undefined") direction = 1;
+
+	// If the number is 0, the 0'th index might not be there.
+	var links = $("slice-"+main_slice).getElementsByTagName("a");
+	if(links.length)
+		if(links[direction]) return links[direction];
+		else return links[0]; //Again, the 0 bug.
+	
+	return "";
+}

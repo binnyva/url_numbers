@@ -1,0 +1,16 @@
+.image-nav, #image-ele {
+	display:block;
+	float:left;
+}
+.image-nav {
+	background-color:#c2d4ff;
+	width:20px;
+	height:200px;
+}
+
+
+#advanced-options, #details, #image-area {
+	display:none;
+}
+
+
