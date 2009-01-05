@@ -57,7 +57,11 @@ function init() {
 	//simpleParse();
 	//$("mask").value = "http://www.schlockmercenary.com/comics/schlock####(2000)|##(11)|##(15).png";
 	//$("mask").value = "http://localhost/Projects/URL_Numbers/Comics/Calvin_Hobbes/####/ch##|##|##.gif";
-	//maskParse();
+	
+	
+	$("url").value = "http://localhost/Projects/URL_Numbers/Comics/Naruto/002/02.jpg";simpleParse();
+	$("mask").value = "http://localhost/Projects/URL_Numbers/Comics/Naruto/###(2)/##.jpg";
+	//maskParse();$("details").show();
 }
 
 

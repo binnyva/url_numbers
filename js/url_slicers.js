@@ -6,18 +6,24 @@ function simpleParse() {
 	
 	initializeGlobalVariables(); // Reinitialize Globals
 	
-	// I did it this way because the flow was entirly different in the last version. This is an artifat from that version.
+	//Global variables...
+	simple_parse_slices_count = 0;
+	simple_parse_slices = []; 
+	
+	simple_parse_slices[0] = {};
+	for(var i in slices[0]) simple_parse_slices[0][i] = slices[0][i]; //Create a copy of the data - not a reference link(Happens in FF - also it line 38, same file)
+	
+	// There is no simple parse - we take the URL, we create a mask(best guess). Then we call the mask parse.
 	var mask = "";
 	var slice = getNextSlice(url, 0);
  	while(slice.number) {
  		mask += slice.text_before + slice.mask;
+ 		if(slice.number != 1) mask += "(" + Number(slice.number) + ")";
  		slice = getNextSlice(url, slice.slice_end_index);
  	}
  	mask += slice.text_before;
- 	
  	$("mask").value = mask;
-
-	buildInterfaceWithSlices();
+ 	maskParse();
 }
 
 // Returns the parts of the URL and the number next to it.
@@ -26,15 +32,14 @@ function getNextSlice(url, index) {
 	url = url.slice(index);
 	if(!url) return false;
 	
-	slice_count++;
-	
+	simple_parse_slices_count++;
 	var match_position = 0;
 	var number = "";
 	
-	var last_slice = slices[slice_count - 1];
+	var last_slice = simple_parse_slices[simple_parse_slices_count - 1];
 	var field = {}; // Initialize all the values
-	for(var i in slices[0]) field[i] = slices[0][i]; // I cant to field = slices[0];  - it creates a reference link in FF. So all changes to field will reflect in slices[0] as well.
-	field.index = slice_count;
+	for(var i in simple_parse_slices[0]) field[i] = simple_parse_slices[0][i]; // I cant to field = simple_parse_slices[0];  - it creates a reference link in FF. So all changes to field will reflect in simple_parse_slices[0] as well.
+	field.index = simple_parse_slices_count;
 
 	var number_match = url.match(/(\d+)/);
 	if(number_match) {
@@ -54,9 +59,8 @@ function getNextSlice(url, index) {
 		field.start_index = last_slice.end_index;
 		field.text_before = full_url.slice(index); //Get the final part of the url
 	}
+	simple_parse_slices[Number(simple_parse_slices_count)] = field;
 
-	slices[Number(slice_count)] = field;
-	
 	return field;
 }
 
@@ -76,16 +80,16 @@ function getSliceHtml(slice_index) {
  		
  		if(ele.number) {
 			if(i+1 == slice_index) url += "%%INSERT_NUMBER_HERE%%";
-			else url += applyMask(ele.number, ele.mask);
+			else url += getSliceNumber(ele);
  		}
  	});
  	//p(url, slice_details.mask);
 	
-	var next_url = url.replace("%%INSERT_NUMBER_HERE%%", applyMask(Number(slice_details.number) + slice_details.increment_by, slice_details.mask));
-	var prev_url = url.replace("%%INSERT_NUMBER_HERE%%", applyMask(Number(slice_details.number) - slice_details.increment_by, slice_details.mask));
+	var next_url = url.replace("%%INSERT_NUMBER_HERE%%", applyMask(Number(slice_details.number) + slice_details.increment_by, slice_details.mask_length));
+	var prev_url = url.replace("%%INSERT_NUMBER_HERE%%", applyMask(Number(slice_details.number) - slice_details.increment_by, slice_details.mask_length));
 	
 	if((Number(slice_details.number)-1) >= 0) text += "<a onclick='return Img.load(this, -1);' class='controls' href='" + prev_url + "'>&laquo;</a> ";
-	text += applyMask(slice_details.number, slice_details.mask) +" <a onclick='return Img.load(this, 1);' class='controls' href='" + next_url + "'>&raquo;</a>";
+	text += getSliceNumber(slice_details) +" <a onclick='return Img.load(this, 1);' class='controls' href='" + next_url + "'>&raquo;</a>";
 	
 	return text;
 }
@@ -102,7 +106,7 @@ function getSliceImageUrl(direction) {
 // Build the control interface with all the slices.
 function buildInterfaceWithSlices() {
 	var html = "";
-	var url = ""
+	var url = "";
 	
 	for(var i=1; i<slices.length; i++) {
 		var current_slice = slices[i];
@@ -112,7 +116,7 @@ function buildInterfaceWithSlices() {
 		
 		//p(current_slice.text_before);
 		if(current_slice.number) {
-			url += current_slice.number;
+			url += getSliceNumber(current_slice);
 			
 			var color = getNextColor();
 			html += "<span class='slice-number' id='slice-"+i+"' style='background-color:"+color+";'>";
@@ -122,6 +126,7 @@ function buildInterfaceWithSlices() {
 		}
 	}
 	
+	p(url);
 	Img.show(url);
 	$("url-area").innerHTML = html;
 }

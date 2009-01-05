@@ -9,7 +9,7 @@ Img = {
 		main_slice = getIdNumber(link.parentNode);
 		
 		var slice_details = slices[main_slice];
-		slice_details.number = applyMask(Number(slice_details.number) + (slice_details.increment_by * direction), slice_details.mask);
+		slice_details.number = applyMask(Number(slice_details.number) + (slice_details.increment_by * direction), slice_details.length);
 		
 		var slice_ele = link.parentNode;
 		slice_ele.innerHTML = getSliceHtml(main_slice);

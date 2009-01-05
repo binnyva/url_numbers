@@ -42,6 +42,7 @@ function getNextSliceMasked(mask, index) {
 		// Fill in the defaults
 		field.number = 1;
 		field.length = field.mask.length;
+		field.mask_length = mask_match[2].length;
 
 		//Mask may have a description field right after it - if so, get it as well.
 		if(mask_match[3]) { //Get the description field if its there
@@ -73,10 +74,9 @@ function getNextSliceMasked(mask, index) {
 				//The field is a number - its the starting digit.
 				} else if(ele.match(/^\d+$/)) {
 					field.starts_at = Number(ele);
+					field.number = field.starts_at;
 				}
 			});
-			
-			if(!field.number) field.number = field.starts_at;
 		
 		}
 		
@@ -89,16 +89,24 @@ function getNextSliceMasked(mask, index) {
 		field.start_index = last_slice.end_index;
 		field.text_before = full_mask.slice(index); //Get the final part of the url
 	}
-
+	
 	slices[Number(slice_count)] = field;
 	
 	return field;
 }
 
 /////////////////////////////////////////////// Mask Fuctions ///////////////////////////////////////////
+function getSliceNumber(slice) {
+	return applyMask(slice.number, slice.mask_length);
+}
+
+/// Second argument can be the mask(eg. ##), or the length of the mask(a number, eg. 2)
 function applyMask(number, mask) {
 	var number_str = number.toString();
-	var mask_len = mask.length;
+	var mask_len = 0;
+	if(!isNaN(mask)) mask_len = mask; //IF the second argument is a number, thats the length.;s
+	else mask_len = mask.length;
+	
 	var number_len = number_str.length;
 	var final_number = "";
 	if(number_len < mask_len) {
