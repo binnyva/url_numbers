@@ -33,6 +33,7 @@ function init() {
 	Bookmark.init();
 	
 	$("image-ele").load(Img.loaded);
+	$("image-ele").on("error", Img.loadError);
 	$("previous-image").click(Img.previous);
 	$("next-image").click(Img.next);
 	$("advanced-tab").click(function() {$("advanced-options").toggle();});

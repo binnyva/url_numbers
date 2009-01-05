@@ -59,9 +59,18 @@ Img = {
 		$("caching").show();
 		
 		cached_image.src = url;
-		cached_image.onload=function() {
-			$("caching").hide();
-		}
+		cached_image.onload = Img.hideCachingMessage;
+		cached_image.onerror = Img.hideCachingMessage;
+	},
+	
+	// Hides the Cacheing Message
+	"hideCachingMessage": function() {
+		$("caching").hide();
+	},
+	
+	// This happens when an image fails to load. Basically, hides the 'loading' message.
+	"loadError": function() {
+		loaded();
 	},
 	
 	// Load the next or previous image in the main slice
