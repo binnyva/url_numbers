@@ -8,7 +8,7 @@ function maskParse() {
 	
 	// I did it this way because the flow was entirly different in the last version. This is an artifat from that version.
 	var slice = getNextSliceMasked(mask, 0);
- 	while(slice.number) {
+ 	while(slice.number !== false) {
  		slice = getNextSliceMasked(mask, slice.slice_end_index);
  	}
 

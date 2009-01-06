@@ -102,7 +102,7 @@ function buildInterfaceWithSlices() {
 		html += current_slice.text_before;
 		url += current_slice.text_before;
 		
-		if(current_slice.number) {
+		if(current_slice.number !== false) {
 			url += getSliceNumber(current_slice);
 			
 			var color = getNextColor();
