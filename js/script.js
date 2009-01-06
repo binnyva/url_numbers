@@ -15,10 +15,10 @@ function initializeGlobalVariables() {
 		"start_index":	0, 		// Slice starts at charector
 		"length":		0, 		// Length of the number in the slice
 		"end_index":	0,	 	// start_index + length
-		"starts_at":	0, 		// Starting number of the slice
+		"starts_at":	1, 		// Starting number of the slice
 		"ends_at":		0,		// The number will go up to this value. For example this will be 31 if its a month
 		"increment_by":	1,		// The next number is number+increment_by
-		"number":		0,		// The current number in the slice.
+		"number":		false,	// The current number in the slice.
 		"index":		0,		// The index of this slice - this slice is at 'slices[index]'
 		"text_before":	""		// The text before the number/mask
 	}];
@@ -59,8 +59,7 @@ function init() {
 	//$("mask").value = "http://localhost/Projects/URL_Numbers/Comics/Calvin_Hobbes/####/ch##|##|##.gif";
 	
 	
-	$("url").value = "http://localhost/Projects/URL_Numbers/Comics/Naruto/002/02.jpg";simpleParse();
-	$("mask").value = "http://localhost/Projects/URL_Numbers/Comics/Naruto/###(2)/##.jpg";
+	$("url").value = "http://localhost/Projects/URL_Numbers/Comics/Naruto/002/01.jpg";simpleParse();
 	//maskParse();$("details").show();
 }
 

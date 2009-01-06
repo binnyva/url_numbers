@@ -64,12 +64,6 @@ function getNextSliceMasked(mask, index) {
 				//Its a day field
 				if(ele == "day") {
 					field.day = true;
-					
-					if(field.starts_at) { // Add a 0 padding to the starts at number.
-						if(field.starts_at < 10) field.starts_at = "0" + field.starts_at;
-					} else {
-						field.starts_at = "01";
-					}
 				
 				//The field is a number - its the starting digit.
 				} else if(ele.match(/^\d+$/)) {
@@ -96,8 +90,9 @@ function getNextSliceMasked(mask, index) {
 }
 
 /////////////////////////////////////////////// Mask Fuctions ///////////////////////////////////////////
+	// :DEPRICATED: in favor of Slice.getNumber
 function getSliceNumber(slice) {
-	return applyMask(slice.number, slice.mask_length);
+	return Slice.getNumber(slice);
 }
 
 /// Second argument can be the mask(eg. ##), or the length of the mask(a number, eg. 2)

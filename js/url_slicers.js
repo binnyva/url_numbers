@@ -65,31 +65,19 @@ function getNextSlice(url, index) {
 }
 
 /// Get the next and previous link for the given slice
-function getSliceHtml(slice_index) {
+function getSliceHtml(slice_index, reset) {
 	// Get the neccessary info of the said slice
 	var slice_details = slices[slice_index];
+	if(reset) slice_details.number = slice_details.starts_at; // For number reset.
 
-	if(!slice_details.number) return "";
+	if(slice_details.number === false) return "";
 	var text = "";
 	
-	//This is a bit complex. Go thru all the slices and get their content.
-	var url = "";
- 	
- 	JSL.array(slices.slice(1)).each(function(ele, i) {
- 		url += ele.text_before;
- 		
- 		if(ele.number) {
-			if(i+1 == slice_index) url += "%%INSERT_NUMBER_HERE%%";
-			else url += getSliceNumber(ele);
- 		}
- 	});
- 	//p(url, slice_details.mask);
+	var next_url = Slice.getUrl(slice_index, 1);
+	var prev_url = Slice.getUrl(slice_index, -1);
 	
-	var next_url = url.replace("%%INSERT_NUMBER_HERE%%", applyMask(Number(slice_details.number) + slice_details.increment_by, slice_details.mask_length));
-	var prev_url = url.replace("%%INSERT_NUMBER_HERE%%", applyMask(Number(slice_details.number) - slice_details.increment_by, slice_details.mask_length));
-	
-	if((Number(slice_details.number)-1) >= 0) text += "<a onclick='return Img.load(this, -1);' class='controls' href='" + prev_url + "'>&laquo;</a> ";
-	text += getSliceNumber(slice_details) +" <a onclick='return Img.load(this, 1);' class='controls' href='" + next_url + "'>&raquo;</a>";
+	if((Number(slice_details.number)-1) >= 0) text += "<a onclick='return Img.load("+slice_index+", -1);' class='controls' href='" + prev_url + "'>&laquo;</a> ";
+	text += Slice.getNumber(slice_details) +" <a onclick='return Img.load("+slice_index+", 1);' class='controls' href='" + next_url + "'>&raquo;</a>";
 	
 	return text;
 }
@@ -114,7 +102,6 @@ function buildInterfaceWithSlices() {
 		html += current_slice.text_before;
 		url += current_slice.text_before;
 		
-		//p(current_slice.text_before);
 		if(current_slice.number) {
 			url += getSliceNumber(current_slice);
 			
@@ -126,7 +113,6 @@ function buildInterfaceWithSlices() {
 		}
 	}
 	
-	p(url);
 	Img.show(url);
 	$("url-area").innerHTML = html;
 }

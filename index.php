@@ -12,6 +12,7 @@ $template->addResource('library/shortcut.js','js');
 $template->addResource('library.js','js');
 $template->addResource('ui.js','js');
 $template->addResource('Bookmark.js','js');
+$template->addResource('Slice.js','js');
 $template->addResource('Img.js','js');
 $template->addResource('url_slicers.js','js');
 $template->addResource('mask_slicers.js','js');
