@@ -58,6 +58,7 @@ printTop("Url Numbers");
 <div id="advanced-options">
 <label for="use-proxy">Use Proxy with Referrer</label><input type="checkbox" id="use-proxy" name="use-proxy" value="1" /><br />
 <label for="auto-resize">Auto Resize Big Images</label><input type="checkbox" id="auto-resize" name="auto-resize" value="1" /><br />
+<label for="autoplay">Autoplay</label><input type="checkbox" id="autoplay" name="autoplay" value="1" /><br />
 </div>
 </form>
 

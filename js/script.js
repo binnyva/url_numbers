@@ -2,6 +2,9 @@
 all_colors = new Array("#99FFCC","#CCFFFF","#FF9999","#FFFFCC","#33CC99","#99CC99","#0099CC");
 bookmarks = [];
 initializeGlobalVariables();
+autoplay_delay = 5000;
+autoplay_timer = false;
+autoplay_next_ready = false;
 
 //p=function(){};
 

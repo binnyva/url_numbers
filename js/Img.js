@@ -58,9 +58,31 @@ Img = {
 		$("caching").innerHTML = "caching <a href='"+url+"'>next image</a>..."
 		$("caching").show();
 		
+		if($("autoplay").checked) {
+			autoplay_next_ready = false;
+			autoplay_timer = setTimeout(Img.autoplay, autoplay_delay);
+		}
+		
 		cached_image.src = url;
-		cached_image.onload = Img.hideCachingMessage;
+		cached_image.onload = Img.nextCachedReady;
 		cached_image.onerror = Img.hideCachingMessage;
+	},
+	
+	// Autoplay the image series
+	"autoplay": function() {
+		if(autoplay_next_ready) Img.next();
+		autoplay_next_ready = true; // The delay was reached - now the image can be shown if load is over.
+		clearTimeout(autoplay_timer);
+	},
+	
+	// Do the things to be done after the next image has been cached
+	"nextCachedReady": function() {
+		if($("autoplay").checked) {
+			if(autoplay_next_ready) Img.next();
+			autoplay_next_ready = true;
+		}
+
+		Img.hideCachingMessage();
 	},
 	
 	// Hides the Cacheing Message

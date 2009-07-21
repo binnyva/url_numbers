@@ -9,7 +9,8 @@ $data = load($_REQUEST['url'],
 		array(
 			'return_info'	=> true, 
 			'referer'		=> $referrer,
-			'cache'			=> true
+			'cache'			=> true,
+			'cache_folder'	=> '/tmp/load-cache/',
 		));
 
 // File not found!
