@@ -45,7 +45,7 @@ printTop("Url Numbers");
 <div id="saved-bookmarks"></div>
 <br />
 
-<input name="url" id="url" type="text" value="" size="70" />
+<input name="url" id="url" type="text" value="<?php echo i($_GET, "url"); ?>" size="70" />
 <input type="submit" id="show-details" value="Parse" /><br />
 
 <div id="details">
@@ -55,11 +55,16 @@ printTop("Url Numbers");
 </div>
 
 <a class="js-links" id="advanced-tab">Advanced Options</a>
-<div id="advanced-options">
-<label for="use-proxy">Use Proxy with Referrer</label><input type="checkbox" id="use-proxy" name="use-proxy" value="1" /><br />
-<label for="auto-resize">Auto Resize Big Images</label><input type="checkbox" id="auto-resize" name="auto-resize" value="1" /><br />
-<label for="autoplay">Autoplay</label><input type="checkbox" id="autoplay" name="autoplay" value="1" /><br />
-</div>
+<ul id="advanced-options">
+<li><label for="use-proxy">Use Proxy with Referrer</label><input type="checkbox" id="use-proxy" name="use-proxy" value="1" /></li>
+
+<li><label for="auto-resize">Auto Resize Big Images</label><input type="checkbox" id="auto-resize" name="auto-resize" value="1" /></li>
+
+<li><label for="autoplay">Autoplay</label><input type="checkbox" id="autoplay" name="autoplay" value="1" />
+<span id="autoplay-options"><label for="autoplay-delay">Delay</label><input type="text" id="autoplay-delay" name="autoplay-delay" value="4" size="2" /> seconds</span>
+</li>
+</ul>
+<br />
 </form>
 
 

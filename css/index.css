@@ -9,8 +9,16 @@
 }
 
 
-#advanced-options, #details, #image-area {
+#advanced-options, #details, #image-area, #autoplay-options {
 	display:none;
 }
 
-
+#advanced-options {
+	list-style:none;
+	margin:0px;
+	padding:0px;
+}
+#advanced-options li {
+	float: left;
+	width:30%;
+}

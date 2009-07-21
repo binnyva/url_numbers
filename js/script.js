@@ -2,9 +2,9 @@
 all_colors = new Array("#99FFCC","#CCFFFF","#FF9999","#FFFFCC","#33CC99","#99CC99","#0099CC");
 bookmarks = [];
 initializeGlobalVariables();
-autoplay_delay = 5000;
 autoplay_timer = false;
 autoplay_next_ready = false;
+home = document.location.href;
 
 //p=function(){};
 
@@ -40,6 +40,10 @@ function init() {
 	$("previous-image").click(Img.previous);
 	$("next-image").click(Img.next);
 	$("advanced-tab").click(function() {$("advanced-options").toggle();});
+	$("autoplay").click(function() {
+		if(this.checked) $("autoplay-options").show("inline");
+		else $("autoplay-options").hide();
+	});
 	
 	//User hits enter - handle the form submit.
 	$("url-form").on("submit", function(e) {
@@ -53,6 +57,15 @@ function init() {
 	shortcut.add("Space", Img.next, {"disable_in_input":true});
 	shortcut.add("Backspace", Img.previous, {"disable_in_input":true});
 	//shortcut.add("Enter", maskParse, {"target": "mask"}); // Target not working in latest shortcuts.js
+	
+	
+	// More initializations...
+	if(home.indexOf("?")+1) {
+		var parts = home.split("?");
+		home = home[0];
+	}
+	
+	if($("url").value) simpleParse();
 	
 	//$("url").value = "http://localhost/Under_Construction/URL_Numbers/Comics/Naruto/00000000/Naruto-Pilot-01.jpg";
 	//$("url").value = "http://www.schlockmercenary.com/comics/schlock20001115.png";

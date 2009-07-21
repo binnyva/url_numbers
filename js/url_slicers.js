@@ -76,8 +76,8 @@ function getSliceHtml(slice_index, reset) {
 	var next_url = Slice.getUrl(slice_index, 1);
 	var prev_url = Slice.getUrl(slice_index, -1);
 	
-	if((Number(slice_details.number)-1) >= 0) text += "<a onclick='return Img.load("+slice_index+", -1);' class='controls' href='" + prev_url + "'>&laquo;</a> ";
-	text += Slice.getNumber(slice_details) +" <a onclick='return Img.load("+slice_index+", 1);' class='controls' href='" + next_url + "'>&raquo;</a>";
+	if((Number(slice_details.number)-1) >= 0) text += "<a onclick='return Img.load("+slice_index+", -1);' class='controls' href='" + home + "?url=" + escape(prev_url) + "'>&laquo;</a> ";
+	text += Slice.getNumber(slice_details) +" <a onclick='return Img.load("+slice_index+", 1);' class='controls' href='" + home + "?url=" + escape(next_url) + "'>&raquo;</a>";
 	
 	return text;
 }
@@ -85,7 +85,14 @@ function getSliceHtml(slice_index, reset) {
 // Get the next and previous urls in the main slice - used to cache those images.
 function getSliceImageUrl(direction) {
 	var link = getMainSliceAnchor();
-	if(link) return link.href;
+	if(link) {
+		var url = link.href;
+		if(url.indexOf("?url=")+1) { //Link may have the url of the project page in it. If so, remove that.
+			url = unescape(url.substr(url.indexOf("?url=")+5));
+		}
+		
+		return url;
+	}
 	
 	return "";
 }
