@@ -71,7 +71,6 @@ Img = {
 	
 	// Autoplay the image series
 	"autoplay": function() {
-		p("Called");
 		if(autoplay_next_ready) Img.next();
 		autoplay_next_ready = true; // The delay was reached - now the image can be shown if load is over.
 		clearTimeout(autoplay_timer);
