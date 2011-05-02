@@ -1,0 +1,25 @@
+http://hackles.org/strips/cartoon14.png
+http://www.schlockmercenary.com/comics/schlock20010825.png
+
+
+#	Digit
+|	Block Seperator
+()	Last block description
+
+
+Block Description
+,		Seperator
+day		01-31
+month		01-12
+year		1970-
+year2		70-69 (ie., 1970 - 2069)
+start=NUMBER	Starts at given number - eg. start=7 (or just 7 is enough). Defaults to 1
+end=NUMBER	Ends at given number
++NUMBER		'+' is an operator - Increment by the given Number. Eg. +2. Default +1
+
+
+
+ToDo
+----
+Slideshow mode - automatically go to the next image when the caching is completed.
+

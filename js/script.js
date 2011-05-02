@@ -1,6 +1,8 @@
 //Globals
 all_colors = new Array("#99FFCC","#CCFFFF","#FF9999","#FFFFCC","#33CC99","#99CC99","#0099CC");
 bookmarks = [];
+url_list = [];
+url_list_index = 0;
 initializeGlobalVariables();
 autoplay_timer = false;
 autoplay_next_ready = false;
@@ -78,7 +80,60 @@ function init() {
 	//maskParse();$("details").show();
 }
 
+/// Save the URL List - if any is given into the array.
+function saveList() {
+	var list = $("url-list").value.split("\n");
+	for(var i in list) {
+		if(!list[i]) continue;
+		
+		var parts = list[i].split(/\s+/); // The list may have comments after the URL
+		if(parts.length > 1) {
+			url_list.push(parts[0]);
+		} else {
+			url_list.push(list[i]);
+		}
+	}
+	
+	$("url-list-nav").innerHTML = getUrlNavCode(url_list_index);
+	$("url").value = url_list[0];
+	simpleParse();
+}
 
+function nextUrlInList() {
+	url_list_index++;
+	if(!url_list[url_list_index]) url_list_index = 0; // Overshot.
+	
+	$("url-list-nav").innerHTML = getUrlNavCode(url_list_index);
+	useThisUrl(url_list[url_list_index]);
+	return false;
+}
+
+function prevUrlInList() {
+	url_list_index--;
+	if(url_list_index == -1) url_list_index = url_list.length - 1; // Undershot.
+	
+	$("url-list-nav").innerHTML = getUrlNavCode(url_list_index);
+	useThisUrl(url_list[url_list_index]);
+	return false;
+}
+
+function getUrlNavCode(url_list_index) {
+	var prev_index = url_list_index - 1;
+	if(!url_list[url_list_index - 1]) prev_index = url_list.length - 1;
+	
+	var next_index = url_list_index + 1;
+	if(!url_list[url_list_index + 1]) prev_index = 0;
+	
+	return "<a href='"+url_list[prev_index]+"' onclick='return nextUrlInList()'>&lt; Prev</a>"
+		+ " | <a href='"+url_list[url_list_index]+"' onclick='return useThisUrl(this.href)'>"+url_list[url_list_index]+"</a> "
+		+ " | <a href='"+url_list[next_index]+"' onclick='return prevUrlInList()'>Next &gt;</a> ";
+}
+
+function useThisUrl(url) {
+ 	$("url").value = url;
+ 	simpleParse();
+ 	return false;
+}
 
 
 /**

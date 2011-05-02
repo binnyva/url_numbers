@@ -55,7 +55,8 @@ printTop("Url Numbers");
 </div>
 
 <a class="js-links" id="advanced-tab">Advanced Options</a>
-<ul id="advanced-options">
+<div id="advanced-options">
+<ul class="horizondal-list">
 <li><label for="use-proxy">Use Proxy with Referrer</label><input type="checkbox" id="use-proxy" name="use-proxy" value="1" /></li>
 
 <li><label for="auto-resize">Auto Resize Big Images</label><input type="checkbox" id="auto-resize" name="auto-resize" value="1" /></li>
@@ -65,6 +66,16 @@ printTop("Url Numbers");
 </li>
 </ul>
 <br />
+
+<label for="url-list"><strong>URL List</strong></label><br />
+<textarea id="url-list" name="url-list" rows="5" cols="50">
+http://localhost/Under_Construction/URL_Numbers/Comics/Naruto/00000000/Naruto-Pilot-01.jpg
+http://www.schlockmercenary.com/comics/schlock20001115.png
+http://localhost/Projects/URL_Numbers/Comics/Calvin_Hobbes/1986/ch860101.gif
+</textarea><br />
+<input type="button" onclick="saveList()" value="Save List" />
+</div>
+<div id="url-list-nav"></div>
 </form>
 
 
