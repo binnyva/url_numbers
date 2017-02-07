@@ -35,8 +35,6 @@ function printEnd() {
 <h1 id="logo"><a href="<?=$config['site_url']?>"><?=$config['site_title']?></a></h1>
 </div>
 
-<script src="<?=joinPath($config['site_url'],'js/library/jsl.js')?>" type="text/javascript"></script>
-<script src="<?=joinPath($config['site_url'],'js/application.js')?>" type="text/javascript"></script>
 <?=implode("\n", $template->js_includes);?>
 </body>
 </html>

@@ -1,1 +1,1 @@
-/var/www/html/Under_Construction/Shortcut/shortcut.js
+/var/www/html/Sites/openjs/openjs.com/scripts/events/keyboard_shortcuts/shortcut.js

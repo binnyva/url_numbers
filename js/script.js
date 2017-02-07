@@ -31,6 +31,7 @@ function initializeGlobalVariables() {
 }
 
 function init() {
+	console.log("hi");
 	// Setup all the event handlers
 	$("show-details").click(simpleParse);
 	$("masked-parse").click(maskParse);
@@ -70,14 +71,8 @@ function init() {
 	if($("url").value) simpleParse();
 	
 	//$("url").value = "http://localhost/Under_Construction/URL_Numbers/Comics/Naruto/00000000/Naruto-Pilot-01.jpg";
-	//$("url").value = "http://www.schlockmercenary.com/comics/schlock20001115.png";
-	// http://localhost/Projects/URL_Numbers/Comics/Calvin_Hobbes/1986/ch860101.gif
 	//simpleParse();
-	//$("mask").value = "http://www.schlockmercenary.com/comics/schlock####(2000)|##(11)|##(15).png";
 	//$("mask").value = "http://localhost/Projects/URL_Numbers/Comics/Calvin_Hobbes/####/ch##|##|##.gif";
-	
-	//$("url").value = "http://localhost/Projects/URL_Numbers/Comics/Naruto/002/01.jpg";simpleParse();
-	//maskParse();$("details").show();
 }
 
 /// Save the URL List - if any is given into the array.
@@ -124,9 +119,9 @@ function getUrlNavCode(url_list_index) {
 	var next_index = url_list_index + 1;
 	if(!url_list[url_list_index + 1]) prev_index = 0;
 	
-	return "<a href='"+url_list[prev_index]+"' onclick='return nextUrlInList()'>&lt; Prev</a>"
+	return "<a href='"+url_list[prev_index]+"' onclick='return prevUrlInList()'>&lt; Prev</a>"
 		+ " | <a href='"+url_list[url_list_index]+"' onclick='return useThisUrl(this.href)'>"+url_list[url_list_index]+"</a> "
-		+ " | <a href='"+url_list[next_index]+"' onclick='return prevUrlInList()'>Next &gt;</a> ";
+		+ " | <a href='"+url_list[next_index]+"' onclick='return nextUrlInList()'>Next &gt;</a> ";
 }
 
 function useThisUrl(url) {

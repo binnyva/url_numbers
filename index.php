@@ -6,10 +6,14 @@ $template->addResource('http://localhost/iframe/images/silk_theme.css','style',t
 $template->addResource('style.css');
 $template->addResource('index.css');
 
+$template->addResource('library/jsl.js','js');
+$template->addResource('library/shortcut.js','js');
+$template->addResource('application.js','js');
+$template->addResource('library.js','js');
+
 $template->addResource('http://localhost/Sites/openjs/openjs.com/scripts/jslibrary/releases/plugins/jsl_debug.js','js',true);
 $template->addResource('http://localhost/Sites/openjs/openjs.com/scripts/jslibrary/releases/plugins/jsl_cookie.js','js',true);
-$template->addResource('library/shortcut.js','js');
-$template->addResource('library.js','js');
+
 $template->addResource('ui.js','js');
 $template->addResource('Bookmark.js','js');
 $template->addResource('Slice.js','js');
@@ -68,11 +72,7 @@ printTop("Url Numbers");
 <br />
 
 <label for="url-list"><strong>URL List</strong></label><br />
-<textarea id="url-list" name="url-list" rows="5" cols="50">
-http://localhost/Under_Construction/URL_Numbers/Comics/Naruto/00000000/Naruto-Pilot-01.jpg
-http://www.schlockmercenary.com/comics/schlock20001115.png
-http://localhost/Projects/URL_Numbers/Comics/Calvin_Hobbes/1986/ch860101.gif
-</textarea><br />
+<textarea id="url-list" name="url-list" rows="5" cols="50"></textarea><br />
 <input type="button" onclick="saveList()" value="Save List" />
 </div>
 <div id="url-list-nav"></div>
