@@ -130,6 +130,15 @@ function useThisUrl(url) {
  	return false;
 }
 
+function array2json(arr) {
+    return JSON.stringify(arr);
+}
+
+function getIdNumber(ele) {
+	return Number(ele.id.replace(/[^\d]/g, ""));
+}
+
+
 
 /**
  * :TODO:

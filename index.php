@@ -9,10 +9,9 @@ $template->addResource('index.css');
 $template->addResource('library/jsl.js','js');
 $template->addResource('library/shortcut.js','js');
 $template->addResource('application.js','js');
-$template->addResource('library.js','js');
 
-$template->addResource('http://localhost/Sites/openjs/openjs.com/scripts/jslibrary/releases/plugins/jsl_debug.js','js',true);
-$template->addResource('http://localhost/Sites/openjs/openjs.com/scripts/jslibrary/releases/plugins/jsl_cookie.js','js',true);
+$template->addResource('library/jsl_debug.js','js');
+$template->addResource('library/jsl_cookie.js','js');
 
 $template->addResource('ui.js','js');
 $template->addResource('Bookmark.js','js');
